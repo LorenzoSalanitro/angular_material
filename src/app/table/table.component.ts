@@ -1,4 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { MatTable } from '@angular/material/table';
+
+
+export interface Dati {
+  id: any;
+  birthDate: any;
+  firstName: any;
+  lastName: any;
+  gender : any;
+  hireDate : any;
+}
 
 @Component({
   selector: 'app-table',
@@ -8,11 +19,25 @@ import { Component } from '@angular/core';
 
 
 export class TableComponent {
-  displayedColumns: string[] = ['id', 'birthDate', 'firstName', 'lastName', 'gender'];
+  displayedColumns: string[] = ['id', 'birthDate', 'firstName', 'lastName', 'gender', 'hireDate'];
   dataSource = Data;
+
+  @ViewChild(MatTable)
+  table!: MatTable<Dati>;
+
+  addData() {
+    const randomElementIndex = Math.floor(Math.random() * Data.length);
+    this.dataSource.push(Data[randomElementIndex]);
+    this.table.renderRows();
+  }
+
+  removeData() {
+    this.dataSource.pop();
+    this.table.renderRows();
+  }
 }
 
-let Data : any = 
+let Data : Dati[] = 
 [
   {
     "id": 10001,
@@ -95,3 +120,4 @@ let Data : any =
       "hireDate": "1989-08-24",
 },
 ];
+
