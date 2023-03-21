@@ -1,5 +1,8 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit,Component, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatTableDataSource} from '@angular/material/table';
+import { DataServiceService } from '../data-service.service';
 
 
 export interface Dati {
@@ -11,6 +14,30 @@ export interface Dati {
   hireDate : any;
 }
 
+export interface risposta
+{
+  _embedded: embedded;
+  _links: links;
+  page:any;
+}
+
+export interface links
+{
+  self:any;
+  first:any;
+  prev:any;
+  next:any;
+  last:any;
+  profile:any;
+}
+
+export interface embedded
+{
+  employees:[Dati];
+}
+
+
+
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
@@ -18,106 +45,37 @@ export interface Dati {
 })
 
 
-export class TableComponent {
-  displayedColumns: string[] = ['id', 'birthDate', 'firstName', 'lastName', 'gender', 'hireDate'];
-  dataSource = Data;
+export class TableComponent  implements AfterViewInit
+{
+  displayedColumns: string[] = ['id','birthDate', 'firstName', 'lastName', 'gender', 'hireDate'];
+
+  dataSources = new MatTableDataSource<risposta>();
 
   @ViewChild(MatTable)
   table!: MatTable<Dati>;
 
-  addData() {
-    const randomElementIndex = Math.floor(Math.random() * Data.length);
-    this.dataSource.push(Data[randomElementIndex]);
-    this.table.renderRows();
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
+
+  ngAfterViewInit() 
+  {
+    this.dataSources.paginator = this.paginator;
   }
 
-  removeData() {
-    this.dataSource.pop();
-    this.table.renderRows();
+  constructor(private restClient:DataServiceService) 
+  {
+    this.loadData();
+  }
+
+  data: any;
+
+  loadData(): void
+  {
+    this.restClient.getDataRows("http://localhost:8080/employees").subscribe
+    (
+      web_data => {this.data = web_data._embedded.employees},
+    )
   }
 }
 
-let Data : Dati[] = 
-[
-  {
-    "id": 10001,
-    "birthDate": "1953-09-02",
-    "firstName": "Georgi",
-    "lastName": "Facello",
-    "gender": "M",
-    "hireDate": "1986-06-26",
-  },
-  { 
-    "id": 10002,
-    "birthDate": "1964-06-02",
-    "firstName": "Bezalel",
-    "lastName": "Simmel",
-    "gender": "F",
-    "hireDate": "1985-11-21",
-  },
-  {
-    "id": 10003,
-    "birthDate": "1959-12-03",
-    "firstName": "Parto",
-    "lastName": "Bamford",
-    "gender": "M",
-    "hireDate": "1986-08-28",
-  },
-  {
-    "id": 10004,
-    "birthDate": "1954-05-01",
-    "firstName": "Chirstian",
-    "lastName": "Koblick",
-    "gender": "M",
-    "hireDate": "1986-12-01",
-  },
-  {
-    "id": 10005,
-    "birthDate": "1955-01-21",
-    "firstName": "Kyoichi",
-    "lastName": "Maliniak",
-    "gender": "M",
-    "hireDate": "1989-09-12",
-  },
-  {
-      "id": 10006,
-      "birthDate": "1953-04-20",
-      "firstName": "Anneke",
-      "lastName": "Preusig",
-      "gender": "F",
-      "hireDate": "1989-06-02",
-  },
-  {
-      "id": 10007,
-      "birthDate": "1957-05-23",
-      "firstName": "Tzvetan",
-      "lastName": "Zielinski",
-      "gender": "F",
-      "hireDate": "1989-02-10",
-  },
-  {
-      "id": 10008,
-      "birthDate": "1958-02-19",
-      "firstName": "Saniya",
-      "lastName": "Kalloufi",
-      "gender": "M",
-      "hireDate": "1994-09-15",
-  },
-  {
-      "id": 10009,
-      "birthDate": "1952-04-19",
-      "firstName": "Sumant",
-      "lastName": "Peac",
-      "gender": "F",
-      "hireDate": "1985-02-18",
-  },
-  {
-      "id": 10010,
-      "birthDate": "1963-06-01",
-      "firstName": "Duangkaew",
-      "lastName": "Piveteau",
-      "gender": "F",
-      "hireDate": "1989-08-24",
-},
-];
 

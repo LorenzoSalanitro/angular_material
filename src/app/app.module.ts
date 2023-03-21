@@ -6,6 +6,9 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatTableModule} from '@angular/material/table';
 import { TableComponent } from './table/table.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { DataServiceService } from './data-service.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -16,9 +19,12 @@ import { TableComponent } from './table/table.component';
     BrowserModule,
     AppRoutingModule,
     MatTableModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatPaginatorModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [DataServiceService],
   bootstrap: [AppComponent]
+  
 })
 export class AppModule { }
