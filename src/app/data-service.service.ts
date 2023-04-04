@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable, retry } from 'rxjs';
-import {risposta } from './table/table.component';
+import { ServerData } from './types/Employee';
 
 @Injectable({
   providedIn: 'root'
@@ -10,9 +10,10 @@ export class DataServiceService {
 
   constructor(private http:HttpClient) { }
 
-  getDataRows(apiURL:string):Observable <risposta>
+  getDataRows(apiURL:string, pageSize?:number, pageNumber? : number):Observable <ServerData>
   {
-    return this.http.get<risposta>(apiURL)
+    const params = new HttpParams().set('page', pageNumber || 0).set('size', pageSize ||10)
+    return this.http.get<ServerData>(apiURL, {params: params})
     .pipe
     (
       retry(2)

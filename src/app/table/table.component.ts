@@ -1,40 +1,11 @@
-import { AfterViewInit,Component, ViewChild } from '@angular/core';
+import { AfterViewInit,Component, OnInit, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import { DataServiceService } from '../data-service.service';
+import {Employee,ServerData} from 'src/app/types/Employee';
 
 
-export interface Dati {
-  id: any;
-  birthDate: any;
-  firstName: any;
-  lastName: any;
-  gender : any;
-  hireDate : any;
-}
-
-export interface risposta
-{
-  _embedded: embedded;
-  _links: links;
-  page:any;
-}
-
-export interface links
-{
-  self:any;
-  first:any;
-  prev:any;
-  next:any;
-  last:any;
-  profile:any;
-}
-
-export interface embedded
-{
-  employees:[Dati];
-}
 
 
 
@@ -45,14 +16,14 @@ export interface embedded
 })
 
 
-export class TableComponent  implements AfterViewInit
+export class TableComponent  implements OnInit
 {
   displayedColumns: string[] = ['id','birthDate', 'firstName', 'lastName', 'gender', 'hireDate'];
-
-  dataSources = new MatTableDataSource<risposta>();
+  data: ServerData | undefined;
+  dataSources = new MatTableDataSource<Employee>();
 
   @ViewChild(MatTable)
-  table!: MatTable<Dati>;
+  table!: MatTable<Employee>;
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -64,17 +35,54 @@ export class TableComponent  implements AfterViewInit
 
   constructor(private restClient:DataServiceService) 
   {
-    this.loadData();
+    this.loadData("http://localhost:8080/employees");
+    this.dataSources = new MatTableDataSource(this.data?._embedded.employees);
   }
 
-  data: any;
+  ngOnInit(): void {
+    
+  }
 
-  loadData(): void
+  
+
+  /*loadData(url : string)
   {
     this.restClient.getDataRows("http://localhost:8080/employees").subscribe
     (
       web_data => {this.data = web_data._embedded.employees},
     )
+  }*/
+
+  loadData(url : string)
+  {
+    this.restClient.getDataRows(url).subscribe
+    (
+      serverResponse => 
+      {
+        this.data = serverResponse;
+        this.dataSources.data = this.data._embedded.employees;
+      }
+    )
+  }
+
+  nextpage()
+  {
+    if (this.data) this.loadData(this.data._links.next.href);
+  }
+
+  prevpage()
+  {
+    if (this.data) this.loadData(this.data._links.prev.href);
+  }
+
+  firstpage()
+  {
+    if (this.data) this.loadData(this.data._links.first.href);
+  }
+
+  lastpage()
+  {
+    if (this.data) this.loadData(this.data._links.last.href);
   }
 }
 
