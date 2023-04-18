@@ -21,6 +21,7 @@ export interface Links{
     prev:  Link;
     next:  Link;
     last:  Link;
+    self: Link;
 }
 export interface Link{
     href: string;

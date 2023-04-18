@@ -18,8 +18,8 @@ import {Employee,ServerData} from 'src/app/types/Employee';
 
 export class TableComponent  implements OnInit
 {
-  displayedColumns: string[] = ['id','birthDate', 'firstName', 'lastName', 'gender', 'hireDate'];
-  data: ServerData | undefined;
+  displayedColumns: string[] = ['id','birthDate', 'firstName', 'lastName', 'gender', 'hireDate', 'Delete'];
+  data: any;
   dataSources = new MatTableDataSource<Employee>();
 
   @ViewChild(MatTable)
@@ -27,6 +27,7 @@ export class TableComponent  implements OnInit
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
+  current: any;
 
   ngAfterViewInit() 
   {
@@ -61,9 +62,17 @@ export class TableComponent  implements OnInit
       {
         this.data = serverResponse;
         this.dataSources.data = this.data._embedded.employees;
+        this.current = url;
       }
     )
   }
+
+  /*addData()
+  {
+    const randomElementIndex = Math.floor(Math.random() * this.data.length);
+    this.data.push(this.dataSources[randomElementIndex]);
+    this.table.renderRows();
+  }*/
 
   nextpage()
   {
@@ -83,6 +92,14 @@ export class TableComponent  implements OnInit
   lastpage()
   {
     if (this.data) this.loadData(this.data._links.last.href);
+  }
+
+  DeleteRow(index:number) 
+  {
+    this.restClient.remove(index).subscribe(()=>{
+      this.loadData(this.current);
+    })
+   
   }
 }
 
