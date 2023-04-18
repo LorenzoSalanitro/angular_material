@@ -10,12 +10,17 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { DataServiceService } from './data-service.service';
 import { HttpClientModule } from '@angular/common/http';
 import {MatButtonModule} from '@angular/material/button';
+import { FormComponent } from './form/form.component';
+import { EditRowComponent } from './edit-row/edit-row.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    TableComponent
+    TableComponent,
+    FormComponent,
+    EditRowComponent
   ],
   imports: [
     BrowserModule,
@@ -24,7 +29,8 @@ import {MatButtonModule} from '@angular/material/button';
     BrowserAnimationsModule,
     MatPaginatorModule,
     HttpClientModule,
-    MatButtonModule
+    MatButtonModule,
+    ReactiveFormsModule
   ],
   providers: [DataServiceService],
   bootstrap: [AppComponent]

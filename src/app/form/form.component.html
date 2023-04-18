@@ -1,0 +1,33 @@
+<form [formGroup]="myForm">
+    <div>
+      <label for="birthDate">birthDate</label>
+      <input type="text" formControlName="birthDate">
+    </div> 
+
+    <div>
+      <label for="firstName">FirstName</label>
+      <input type="text" formControlName="firstName">
+    </div> 
+
+    <div>
+      <label for="lastName">LastName</label>
+      <textarea formControlName="lastName"></textarea>
+      <input type="text" formControlName="lastName">
+    </div> 
+
+    <div>
+        <label for="gender">Gender</label>
+        <textarea formControlName="gender"></textarea>
+        <input type="select" formControlName="gender">
+        <option value="M">M</option>
+        <option value="F">F</option>
+        <option value="Other">Other</option>
+    </div> 
+
+    <div>
+        <label for="hireDate">HireDate</label>
+        <textarea formControlName="hireDate"></textarea>
+        <input type="date" formControlName="hireDate">
+    </div> 
+    <button type="button">Invia</button>
+  </form>

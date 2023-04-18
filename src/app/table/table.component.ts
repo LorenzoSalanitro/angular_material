@@ -18,7 +18,7 @@ import {Employee,ServerData} from 'src/app/types/Employee';
 
 export class TableComponent  implements OnInit
 {
-  displayedColumns: string[] = ['id','birthDate', 'firstName', 'lastName', 'gender', 'hireDate', 'Delete'];
+  displayedColumns: string[] = ['id','birthDate', 'firstName', 'lastName', 'gender', 'hireDate', 'Delete', 'Edit'];
   data: any;
   dataSources = new MatTableDataSource<Employee>();
 
@@ -44,16 +44,6 @@ export class TableComponent  implements OnInit
     
   }
 
-  
-
-  /*loadData(url : string)
-  {
-    this.restClient.getDataRows("http://localhost:8080/employees").subscribe
-    (
-      web_data => {this.data = web_data._embedded.employees},
-    )
-  }*/
-
   loadData(url : string)
   {
     this.restClient.getDataRows(url).subscribe
@@ -66,13 +56,6 @@ export class TableComponent  implements OnInit
       }
     )
   }
-
-  /*addData()
-  {
-    const randomElementIndex = Math.floor(Math.random() * this.data.length);
-    this.data.push(this.dataSources[randomElementIndex]);
-    this.table.renderRows();
-  }*/
 
   nextpage()
   {
